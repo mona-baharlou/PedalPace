@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.baharlou.pedalpace.domain.model.Metric
 
 @Composable
-fun FactorItem(
+fun MetricItem(
     factor: Metric,
     height: Dp
 ) {
