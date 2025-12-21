@@ -1,5 +1,6 @@
 package com.baharlou.pedalpace.presentation.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -29,7 +30,7 @@ fun ForecastCard(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
@@ -42,7 +43,7 @@ fun ForecastCard(
                 color = BikeOrangeLight,
                 modifier = Modifier.size(48.dp)
             ) {
-                Box(contentAlignment = Alignment.Center) {
+                Box(modifier = Modifier.background(MaterialTheme.colorScheme.surface), contentAlignment = Alignment.Center) {
                     Text(if(score.score < 40) "🌧️" else "☁️", fontSize = 24.sp)
                 }
             }
@@ -66,7 +67,7 @@ fun ForecastCard(
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = score.overallRating.take(25) + "...",
+                        text = score.overallRating.take(30) + "...",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 12.sp
                     )

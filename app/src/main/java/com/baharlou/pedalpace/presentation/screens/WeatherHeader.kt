@@ -10,7 +10,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,16 +17,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.baharlou.pedalpace.domain.model.*
 import com.baharlou.pedalpace.presentation.components.CircularProgressBar
-import com.baharlou.pedalpace.presentation.components.WeatherEffectBackground
 import com.baharlou.pedalpace.presentation.components.WeatherType
-import com.baharlou.pedalpace.ui.theme.BackgroundLight
 import com.baharlou.pedalpace.ui.theme.BikeGreen
 import com.baharlou.pedalpace.ui.theme.BikeGreenDark
 import com.baharlou.pedalpace.ui.theme.BikeGreenLight
 import com.baharlou.pedalpace.ui.theme.PedalPaceTheme
-import com.baharlou.pedalpace.ui.theme.TextMuted
-import com.baharlou.pedalpace.ui.theme.TextPrimary
-import com.baharlou.pedalpace.ui.theme.TextSecondary
+
 @Composable
 fun WeatherHeader(
     weatherData: WeatherResponse,
@@ -49,7 +44,6 @@ fun WeatherHeader(
             .fillMaxWidth()
             .padding(bottom = 8.dp),
         shape = RoundedCornerShape(32.dp),
-        // THEME AWARE: Uses surface color (CardWhite in Light, DarkCard in Dark)
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
@@ -60,7 +54,7 @@ fun WeatherHeader(
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(32.dp))
         ) {
-            WeatherEffectBackground(weatherType = weatherType)
+           // WeatherEffectBackground(weatherType = weatherType)
 
             Column(modifier = Modifier.padding(24.dp)) {
                 Row(
@@ -73,11 +67,9 @@ fun WeatherHeader(
                             text = formattedDate,
                             fontSize = 28.sp,
                             fontWeight = FontWeight.Bold,
-                            // THEME AWARE: Primary text color
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Surface(
-                            // THEME AWARE: Green pill remains green, but use your brand logic
                             color = BikeGreenLight,
                             shape = RoundedCornerShape(16.dp),
                             modifier = Modifier.padding(vertical = 8.dp)
@@ -99,7 +91,6 @@ fun WeatherHeader(
 
                 // Recommendation Banner
                 Surface(
-                    // THEME AWARE: Uses surfaceVariant for inner sections
                     color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
                     shape = RoundedCornerShape(20.dp),
                     modifier = Modifier
@@ -119,7 +110,6 @@ fun WeatherHeader(
                             )
                             Text(
                                 text = score?.overallRating ?: "",
-                                // THEME AWARE: Secondary text
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 13.sp,
                                 lineHeight = 18.sp
@@ -214,7 +204,6 @@ fun MetricItem(
 ) {
     Surface(
         modifier = modifier,
-        // THEME AWARE: Inner metric boxes
         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
         shape = RoundedCornerShape(20.dp)
     ) {

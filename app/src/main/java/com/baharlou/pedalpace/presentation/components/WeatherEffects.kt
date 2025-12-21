@@ -91,11 +91,9 @@ fun WeatherEffectBackground(
 
     Canvas(modifier = modifier.fillMaxSize()) {
         val color = if (weatherType == WeatherType.RAIN) {
-            //Color(0xFF031933).copy(alpha = 0.6f) // Blueish rain
             Color(0xFF60A5FA).copy(alpha = 0.6f) // Blueish rain
         } else {
             Color.White.copy(alpha = 0.8f) // White snow
-            //Color.Red//.copy(alpha = 0.8f) // White snow
         }
 
         particles.forEach { particle ->
@@ -152,7 +150,6 @@ private fun DrawScope.drawParticle(
 @Composable
 private fun PreviewRainEffect() {
     PedalPaceTheme {
-        // We use a dark background so the particles are visible
         Box(
             modifier = Modifier
                 .fillMaxWidth()

@@ -158,13 +158,12 @@ fun WeatherContent(
                 Text(
                     text = "NEXT DAYS",
                     fontWeight = FontWeight.ExtraBold,
-                    // THEME AWARE: Using the muted secondary text slot
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
                     fontSize = 12.sp,
                     letterSpacing = 1.sp
                 )
                 TextButton(onClick = {}) {
-                    Text("See 7 Days", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+                    Text("See 5 Days", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
                 }
             }
         }
