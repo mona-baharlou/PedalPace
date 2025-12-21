@@ -17,7 +17,9 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.baharlou.pedalpace.ui.theme.NightBlue
 import com.baharlou.pedalpace.ui.theme.PedalPaceTheme
+import com.baharlou.pedalpace.ui.theme.TextPrimary
 import kotlinx.coroutines.isActive
 import kotlin.random.Random
 
@@ -57,6 +59,13 @@ fun WeatherEffectBackground(
 
     // High-performance animation loop
     LaunchedEffect(weatherType) {
+
+       /* if (particles.isEmpty()) {
+            repeat(70) {
+                particles.add(createRandomParticle(initialY = Random.nextFloat()))
+            }
+        }
+*/
         while (isActive) {
             withFrameNanos { _ ->
                 for (i in particles.indices) {
@@ -82,9 +91,11 @@ fun WeatherEffectBackground(
 
     Canvas(modifier = modifier.fillMaxSize()) {
         val color = if (weatherType == WeatherType.RAIN) {
+            //Color(0xFF031933).copy(alpha = 0.6f) // Blueish rain
             Color(0xFF60A5FA).copy(alpha = 0.6f) // Blueish rain
         } else {
             Color.White.copy(alpha = 0.8f) // White snow
+            //Color.Red//.copy(alpha = 0.8f) // White snow
         }
 
         particles.forEach { particle ->
@@ -146,11 +157,10 @@ private fun PreviewRainEffect() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
-                .background(Color(0xFF1E293B))
+                .background(TextPrimary)
         ) {
             WeatherEffectBackground(weatherType = WeatherType.RAIN)
 
-            // Just a label to identify the preview
             Text(
                 "Rain Effect Active",
                 color = Color.White,
@@ -169,7 +179,7 @@ private fun PreviewSnowEffect() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
-                .background(Color(0xFF0F172A))
+                .background(NightBlue)
         ) {
             WeatherEffectBackground(weatherType = WeatherType.SNOW)
 

@@ -1,4 +1,4 @@
-package com.baharlou.pedalpace.presentation
+package com.baharlou.pedalpace.presentation.screens
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.*
@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
@@ -19,15 +20,20 @@ import com.baharlou.pedalpace.domain.model.*
 import com.baharlou.pedalpace.presentation.components.CircularProgressBar
 import com.baharlou.pedalpace.presentation.components.WeatherEffectBackground
 import com.baharlou.pedalpace.presentation.components.WeatherType
+import com.baharlou.pedalpace.ui.theme.BackgroundLight
+import com.baharlou.pedalpace.ui.theme.BikeGreen
+import com.baharlou.pedalpace.ui.theme.BikeGreenDark
+import com.baharlou.pedalpace.ui.theme.BikeGreenLight
 import com.baharlou.pedalpace.ui.theme.PedalPaceTheme
-
+import com.baharlou.pedalpace.ui.theme.TextMuted
+import com.baharlou.pedalpace.ui.theme.TextPrimary
+import com.baharlou.pedalpace.ui.theme.TextSecondary
 @Composable
 fun WeatherHeader(
     weatherData: WeatherResponse,
     score: Score?,
     formattedDate: String
 ) {
-    // Determine the animation type based on weather description
     val weatherType = remember(weatherData) {
         val desc = weatherData.daily.firstOrNull()?.weather?.firstOrNull()?.description?.lowercase() ?: ""
         when {
@@ -43,16 +49,20 @@ fun WeatherHeader(
             .fillMaxWidth()
             .padding(bottom = 8.dp),
         shape = RoundedCornerShape(32.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        // THEME AWARE: Uses surface color (CardWhite in Light, DarkCard in Dark)
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            // 1. Animation Layer (Falls behind the text)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(32.dp))
+        ) {
             WeatherEffectBackground(weatherType = weatherType)
 
-            // 2. Content Layer
             Column(modifier = Modifier.padding(24.dp)) {
-                // Top Row: Date and Circular Progress
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -63,16 +73,18 @@ fun WeatherHeader(
                             text = formattedDate,
                             fontSize = 28.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF1E293B)
+                            // THEME AWARE: Primary text color
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Surface(
-                            color = Color(0xFFDCFCE7),
+                            // THEME AWARE: Green pill remains green, but use your brand logic
+                            color = BikeGreenLight,
                             shape = RoundedCornerShape(16.dp),
                             modifier = Modifier.padding(vertical = 8.dp)
                         ) {
                             Text(
                                 text = "✓ BEST DAY FOR CYCLING",
-                                color = Color(0xFF166534),
+                                color = BikeGreenDark,
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.ExtraBold
@@ -87,7 +99,8 @@ fun WeatherHeader(
 
                 // Recommendation Banner
                 Surface(
-                    color = Color(0xFFF8FAFC),
+                    // THEME AWARE: Uses surfaceVariant for inner sections
+                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
                     shape = RoundedCornerShape(20.dp),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -100,13 +113,14 @@ fun WeatherHeader(
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
                                 text = score?.recommendation?.name ?: "UNKNOWN",
-                                color = Color(0xFF22C55E),
+                                color = BikeGreen, // Accent color stays
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 14.sp
                             )
                             Text(
                                 text = score?.overallRating ?: "",
-                                color = Color(0xFF64748B),
+                                // THEME AWARE: Secondary text
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 13.sp,
                                 lineHeight = 18.sp
                             )
@@ -115,7 +129,6 @@ fun WeatherHeader(
                     }
                 }
 
-                // Temperature and Weather Icon Row
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
@@ -127,18 +140,18 @@ fun WeatherHeader(
                         text = "$currentTemp°",
                         fontSize = 68.sp,
                         fontWeight = FontWeight.W200,
-                        color = Color(0xFF1E293B)
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
                         text = "/ $minTemp°",
-                        color = Color(0xFF94A3B8),
+                        // THEME AWARE: Muted text
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                         fontSize = 22.sp,
                         modifier = Modifier.padding(top = 18.dp, start = 4.dp)
                     )
 
                     Spacer(modifier = Modifier.weight(1f))
 
-                    // Pulsing Animation for the Weather Emoji
                     val infiniteTransition = rememberInfiniteTransition(label = "pulse")
                     val scale by infiniteTransition.animateFloat(
                         initialValue = 1f,
@@ -150,7 +163,7 @@ fun WeatherHeader(
                     )
 
                     Text(
-                        text = when(weatherType) {
+                        text = when (weatherType) {
                             WeatherType.RAIN -> "🌧️"
                             WeatherType.SNOW -> "❄️"
                             WeatherType.CLOUDY -> "☁️"
@@ -163,7 +176,6 @@ fun WeatherHeader(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Metrics Row
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -183,7 +195,7 @@ fun WeatherHeader(
                     )
                     MetricItem(
                         modifier = Modifier.weight(1f),
-                        value = "6:30 PM", // Replace with actual sunset if available in model
+                        value = "6:30 PM",
                         label = "SUNSET",
                         icon = "🌅"
                     )
@@ -202,7 +214,8 @@ fun MetricItem(
 ) {
     Surface(
         modifier = modifier,
-        color = Color(0xFFF8FAFC),
+        // THEME AWARE: Inner metric boxes
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
         shape = RoundedCornerShape(20.dp)
     ) {
         Column(
@@ -216,19 +229,17 @@ fun MetricItem(
                 text = value,
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
-                color = Color(0xFF1E293B)
+                color = MaterialTheme.colorScheme.onSurface
             )
             Text(
                 text = label,
                 fontSize = 10.sp,
-                color = Color(0xFF94A3B8),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontWeight = FontWeight.Bold
             )
         }
     }
 }
-
-
 
 @Preview(showBackground = true, backgroundColor = 0xFFF8FAFC)
 @Composable

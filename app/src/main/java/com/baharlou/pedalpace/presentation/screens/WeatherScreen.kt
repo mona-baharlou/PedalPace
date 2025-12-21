@@ -19,7 +19,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.baharlou.pedalpace.domain.model.*
-import com.baharlou.pedalpace.presentation.WeatherHeader
 import com.baharlou.pedalpace.presentation.components.ForecastCard
 import com.baharlou.pedalpace.presentation.viewModel.WeatherState
 import com.baharlou.pedalpace.presentation.viewModel.WeatherViewModel
@@ -43,7 +42,6 @@ fun WeatherScreen(
         }
     }
 
-    // Triggered once when the screen enters the Composition
     LaunchedEffect(Unit) {
         viewModel.checkLocationPermission()
         if (!locationPermissionGranted) {
@@ -78,52 +76,35 @@ fun WeatherScreenContent(
                             text = "Weather Forecast",
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp,
-                            color = Color(0xFF1E293B)
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
                                 Icons.Default.LocationOn,
                                 contentDescription = null,
                                 modifier = Modifier.size(12.dp),
-                                tint = Color.Gray
+                                tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
                                 text = weatherState.weatherData?.city?.name ?: "Detecting...",
                                 fontSize = 12.sp,
-                                color = Color.Gray
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                             )
                         }
                     }
                 },
-                navigationIcon = {
-                    /*IconButton(onClick = {}) {
-                        Icon(Icons.Default.Settings, contentDescription = "Settings", tint = Color(0xFF1E293B))
-                    }*/
-                },
                 actions = {
-                    // Empty IconButton for symmetry
                     IconButton(onClick = {}, enabled = false) {
                         Icon(Icons.Default.Settings, contentDescription = null, tint = Color.Transparent)
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color(0xFFF8FAFC)
+                    containerColor = MaterialTheme.colorScheme.background
                 )
             )
         },
-        floatingActionButton = {
-           /* FloatingActionButton(
-                onClick = {},
-                containerColor = Color(0xFF1E293B),
-                contentColor = Color.White,
-                shape = androidx.compose.foundation.shape.CircleShape,
-                modifier = Modifier.padding(bottom = 16.dp, end = 8.dp)
-            ) {
-                Text("🌙", fontSize = 20.sp)
-            }*/
-        },
-        containerColor = Color(0xFFF8FAFC)
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
             val data = weatherState.weatherData
@@ -160,7 +141,6 @@ fun WeatherContent(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Main Excellent Card
         item {
             WeatherHeader(
                 weatherData = weatherData,
@@ -169,7 +149,6 @@ fun WeatherContent(
             )
         }
 
-        // Section Title
         item {
             Row(
                 modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
@@ -179,17 +158,17 @@ fun WeatherContent(
                 Text(
                     text = "NEXT DAYS",
                     fontWeight = FontWeight.ExtraBold,
-                    color = Color(0xFF64748B),
+                    // THEME AWARE: Using the muted secondary text slot
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
                     fontSize = 12.sp,
                     letterSpacing = 1.sp
                 )
                 TextButton(onClick = {}) {
-                    Text("See 7 Days", color = Color(0xFF22C55E), fontWeight = FontWeight.Bold)
+                    Text("See 7 Days", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
                 }
             }
         }
 
-        // List of other days
         items(dailyScores.filter { it.first.date != bestDay?.first?.date }) { (forecast, score) ->
             ForecastCard(
                 forecast = forecast,
@@ -200,8 +179,10 @@ fun WeatherContent(
     }
 }
 
+// PREVIEWS ///////////////////
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "Light Mode")
+@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES, name = "Dark Mode")
 @Composable
 fun PreviewWeatherScreenFull() {
     val mockForecasts = listOf(

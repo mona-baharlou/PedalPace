@@ -1,16 +1,12 @@
 package com.baharlou.pedalpace.presentation.components
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
@@ -24,6 +20,10 @@ fun CircularProgressBar(
     score: Int,
     modifier: Modifier = Modifier
 ) {
+    val trackColor = MaterialTheme.colorScheme.surfaceVariant
+    val progressColor = MaterialTheme.colorScheme.primary
+    val textColor = MaterialTheme.colorScheme.onSurface
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -31,18 +31,16 @@ fun CircularProgressBar(
         Canvas(modifier = Modifier.fillMaxSize()) {
             val strokeWidth = 8.dp.toPx()
 
-            // Background Track
             drawArc(
-                color = Color(0xFFF1F5F9),
+                color = trackColor,
                 startAngle = 0f,
                 sweepAngle = 360f,
                 useCenter = false,
                 style = Stroke(width = strokeWidth)
             )
 
-            // Progress
             drawArc(
-                color = Color(0xFF22C55E),
+                color = progressColor,
                 startAngle = -90f,
                 sweepAngle = (score / 100f) * 360f,
                 useCenter = false,
@@ -53,13 +51,13 @@ fun CircularProgressBar(
         Row(verticalAlignment = Alignment.Bottom) {
             Text(
                 text = "$score",
-                color = Color.Black,
+                color = textColor,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Black
             )
             Text(
                 text = "%",
-                color = Color.Black,
+                color = textColor,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 2.dp)
@@ -68,36 +66,24 @@ fun CircularProgressBar(
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
-@Composable
-private fun PreviewCircularProgressBar() {
-    PedalPaceTheme {
-        Box(
-            modifier = Modifier
-                .padding(20.dp)
-                .size(100.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressBar(
-                score = 85
-            )
-        }
-    }
-}
+// --- UPDATED PREVIEWS ---
 
-@Preview(showBackground = true, name = "Lower Score")
+@Preview(showBackground = true, name = "Light Mode")
+@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES, name = "Dark Mode")
 @Composable
-private fun PreviewCircularProgressBarLow() {
+private fun PreviewCircularProgressBarTheme() {
     PedalPaceTheme {
-        Box(
-            modifier = Modifier
-                .padding(20.dp)
-                .size(100.dp),
-            contentAlignment = Alignment.Center
+        androidx.compose.material3.Surface(
+            color = MaterialTheme.colorScheme.surface
         ) {
-            CircularProgressBar(
-                score = 32
-            )
+            Box(
+                modifier = Modifier
+                    .padding(20.dp)
+                    .size(100.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressBar(score = 85)
+            }
         }
     }
 }

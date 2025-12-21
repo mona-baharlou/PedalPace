@@ -15,6 +15,8 @@ import com.baharlou.pedalpace.domain.model.DailyForecast
 import com.baharlou.pedalpace.domain.model.Recommendation
 import com.baharlou.pedalpace.domain.model.Score
 import com.baharlou.pedalpace.domain.model.Temperature
+import com.baharlou.pedalpace.ui.theme.BikeOrange
+import com.baharlou.pedalpace.ui.theme.BikeOrangeLight
 import com.baharlou.pedalpace.ui.theme.PedalPaceTheme
 
 @Composable
@@ -26,7 +28,10 @@ fun ForecastCard(
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -34,7 +39,7 @@ fun ForecastCard(
         ) {
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = Color(0xFFFFF7ED),
+                color = BikeOrangeLight,
                 modifier = Modifier.size(48.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
@@ -46,14 +51,31 @@ fun ForecastCard(
 
             Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(formattedDate, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    Text(
+                        text = formattedDate,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
                     Spacer(modifier = Modifier.weight(1f))
-                    Text("${score.score}%", color = Color(0xFFF97316), fontWeight = FontWeight.Bold)
+                    Text(
+                        text = "${score.score}%",
+                        color = BikeOrange,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(score.overallRating.take(25) + "...", color = Color.Gray, fontSize = 12.sp)
+                    Text(
+                        text = score.overallRating.take(25) + "...",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 12.sp
+                    )
                     Spacer(modifier = Modifier.weight(1f))
-                    Text("${forecast.temperature.max.toInt()}° / ${forecast.temperature.min.toInt()}°", color = Color.Gray, fontSize = 12.sp)
+                    Text(
+                        text = "${forecast.temperature.max.toInt()}° / ${forecast.temperature.min.toInt()}°",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 12.sp
+                    )
                 }
             }
         }

@@ -9,18 +9,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ErrorScreen(error: String, onRetry: () -> Unit){
+fun ErrorScreen(error: String, onRetry: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -35,14 +35,14 @@ fun ErrorScreen(error: String, onRetry: () -> Unit){
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = "Oops! Something went wrong",
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onBackground,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = error,
-            color = Color(0xFFCBD5E1),
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
             fontSize = 16.sp,
             textAlign = TextAlign.Center
         )
@@ -50,8 +50,8 @@ fun ErrorScreen(error: String, onRetry: () -> Unit){
         Button(
             onClick = onRetry,
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF22C55E),
-                contentColor = Color.White
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             ),
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier.padding(horizontal = 32.dp)
@@ -59,5 +59,4 @@ fun ErrorScreen(error: String, onRetry: () -> Unit){
             Text("Try Again", fontWeight = FontWeight.SemiBold)
         }
     }
-
 }
