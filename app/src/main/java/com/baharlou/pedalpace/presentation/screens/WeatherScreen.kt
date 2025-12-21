@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.baharlou.pedalpace.domain.model.*
+import com.baharlou.pedalpace.presentation.WeatherHeader
 import com.baharlou.pedalpace.presentation.components.ForecastCard
 import com.baharlou.pedalpace.presentation.viewModel.WeatherState
 import com.baharlou.pedalpace.presentation.viewModel.WeatherViewModel
