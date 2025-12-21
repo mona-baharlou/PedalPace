@@ -3,6 +3,9 @@ package com.baharlou.pedalpace.presentation.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -73,9 +76,9 @@ fun WeatherScreenContent(
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = {}) {
+                    /*IconButton(onClick = {}) {
                         Icon(Icons.Default.Settings, contentDescription = "Settings", tint = Color(0xFF1E293B))
-                    }
+                    }*/
                 },
                 actions = {
                     // Empty IconButton for symmetry
@@ -89,7 +92,7 @@ fun WeatherScreenContent(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
+           /* FloatingActionButton(
                 onClick = {},
                 containerColor = Color(0xFF1E293B),
                 contentColor = Color.White,
@@ -97,7 +100,7 @@ fun WeatherScreenContent(
                 modifier = Modifier.padding(bottom = 16.dp, end = 8.dp)
             ) {
                 Text("🌙", fontSize = 20.sp)
-            }
+            }*/
         },
         containerColor = Color(0xFFF8FAFC)
     ) { padding ->
@@ -174,7 +177,6 @@ fun WeatherContent(
     }
 }
 
-// --- PREVIEW ---
 
 @Preview(showBackground = true)
 @Composable
@@ -186,9 +188,9 @@ fun PreviewWeatherScreenFull() {
     )
 
     val mockScores = listOf(
-        Score(85, Recommendation.EXCELLENT, "Perfect weather for cycling!", emptyList()),
-        Score(65, Recommendation.GOOD, "A bit cloudy but safe.", emptyList()),
-        Score(35, Recommendation.POOR, "High chance of rain.", emptyList())
+        Score(85, Recommendation.EXCELLENT, emptyList(),"Perfect weather for cycling!"),
+        Score(65, Recommendation.GOOD,emptyList(), "A bit cloudy but safe."),
+        Score(35, Recommendation.POOR, emptyList(),"High chance of rain.")
     )
 
     val mockState = WeatherState(
