@@ -30,7 +30,7 @@ fun ForecastCard(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(0.4f)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
@@ -43,8 +43,13 @@ fun ForecastCard(
                 color = BikeOrangeLight,
                 modifier = Modifier.size(48.dp)
             ) {
-                Box(modifier = Modifier.background(MaterialTheme.colorScheme.surface), contentAlignment = Alignment.Center) {
-                    Text(if(score.score < 40) "🌧️" else "☁️", fontSize = 24.sp)
+                //icon Box
+                Box(
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.9f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(if (score.score < 40) "🌧️" else "☁️", fontSize = 24.sp)
                 }
             }
 
@@ -82,7 +87,6 @@ fun ForecastCard(
         }
     }
 }
-
 
 
 @Preview(showBackground = true, backgroundColor = 0xFFF8FAFC)
