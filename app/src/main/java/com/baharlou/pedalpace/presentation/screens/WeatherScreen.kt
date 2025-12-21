@@ -1,5 +1,8 @@
 package com.baharlou.pedalpace.presentation.screens
 
+import android.Manifest
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -29,7 +32,24 @@ fun WeatherScreen(
     viewModel: WeatherViewModel = koinViewModel()
 ) {
     val weatherState by viewModel.weatherState
+    val locationPermissionGranted by viewModel.locationPermissionGranted
     val dailyScores by viewModel.dailyScores
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            viewModel.checkLocationPermission()
+        }
+    }
+
+    // Triggered once when the screen enters the Composition
+    LaunchedEffect(Unit) {
+        viewModel.checkLocationPermission()
+        if (!locationPermissionGranted) {
+            permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
 
     WeatherScreenContent(
         modifier = modifier,
@@ -108,7 +128,9 @@ fun WeatherScreenContent(
         Box(modifier = Modifier.padding(padding)) {
             val data = weatherState.weatherData
             when {
-                weatherState.isLoading && data == null -> LoadingScreen()
+                weatherState.isLoading || (data == null && weatherState.error == null) -> {
+                    LoadingScreen()
+                }
                 weatherState.error != null -> ErrorScreen(error = weatherState.error, onRetry = {})
                 data != null -> {
                     WeatherContent(

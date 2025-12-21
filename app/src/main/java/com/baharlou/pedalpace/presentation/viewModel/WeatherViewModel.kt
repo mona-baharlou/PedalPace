@@ -45,6 +45,10 @@ class WeatherViewModel(
     private val _dailyScores = mutableStateOf<List<Pair<DailyForecast, Score>>>(emptyList())
     val dailyScores: State<List<Pair<DailyForecast, Score>>> = _dailyScores
 
+    init {
+        checkLocationPermission()
+    }
+
     fun checkLocationPermission() {
         val context = getApplication<Application>()
         val hasPermission = ContextCompat.checkSelfPermission(

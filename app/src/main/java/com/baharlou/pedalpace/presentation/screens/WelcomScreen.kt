@@ -32,7 +32,7 @@ fun WelcomeScreen() {
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = "Bike Weather",
-            color = Color.White,
+            color = Color(0xFF5E6165),
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold
         )
