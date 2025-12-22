@@ -1,0 +1,36 @@
+Privacy Policy for PedalPace
+Last Updated: December 22, 2025
+
+PedalPace ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and share information when you use our mobile application.
+
+1. Information We Collect
+Precise Location Data: To provide accurate local weather forecasts and calculate your cycling suitability score, PedalPace requires access to your device's location (GPS). This data is used only while the app is in use and is not stored on our servers.
+
+2. How We Use Information
+Weather Forecasting: Your location is sent to the OpenWeather API to fetch real-time meteorological data.
+
+AI Insights: Weather parameters (temperature, wind, etc.) are processed via the Google Gemini API to generate cycling "Pro-Tips." No personally identifiable information (PII) is sent to the AI engine.
+
+Score Calculation: Data is processed locally on your device to determine your cycling suitability score.
+
+3. Third-Party Services
+We use the following third-party providers:
+
+OpenWeatherMap: For weather data 
+
+Google Gemini / Google Play Services: For AI insights and location accuracy (Privacy Policy)
+
+4. Data Retention
+PedalPace does not create user accounts or store your location history on any external database. Your data remains on your device and is cleared when the app is closed or uninstalled.
+
+5. Permissions
+You can grant or revoke location permissions at any time through your device settings. Please note that if permissions are denied, the app will be unable to fetch weather data.
+
+6. Children’s Privacy
+Our app is not intended for children under 13. We do not knowingly collect information from children.
+
+7. Changes to This Policy
+We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.
+
+8. Contact Us
+If you have questions about this Privacy Policy, you can contact us at: monabahardev@gmail.com
