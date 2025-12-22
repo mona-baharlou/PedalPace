@@ -46,7 +46,7 @@ fun ForecastCard(
                 //icon Box
                 Box(
                     modifier = Modifier
-                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.9f)),
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.98f)),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(if (score.score < 40) "🌧️" else "☁️", fontSize = 24.sp)

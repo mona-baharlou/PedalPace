@@ -45,7 +45,7 @@ fun WeatherHeader(
             .padding(bottom = 8.dp),
         shape = RoundedCornerShape(32.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(0.4f)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {

@@ -89,7 +89,7 @@ fun WeatherScreenContent(
                             Text(
                                 text = weatherState.weatherData?.city?.name ?: "Detecting...",
                                 fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+                                color = MaterialTheme.colorScheme.onBackground//.copy(alpha = 0.6f)
                             )
                         }
                     }
