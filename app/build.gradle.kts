@@ -139,6 +139,10 @@ dependencies {
     // Generative AI SDK for Gemini
     implementation(libs.generativeai)
 
+    // Koin for Testing
+    androidTestImplementation(libs.koin.test)
+    testImplementation(libs.truth)
+
 }
 
 tasks.register("assembleReleaseApk") {
