@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">PedalPace</string>
+    <string name="openweather_attribution">
+    Weather data provided by OpenWeather
+</string>
+    <string name="next_days">NEXT DAYS</string>
+    <string name="see_5_days">See 5 Days</string>
+    <string name="ai_coach_tip">AI COACH TIP</string>
+    <string name="weather_forecast">Weather Forecast</string>
+    <string name="detecting">Detecting...</string>
+    <string name="check_your_tire_pressure_and_stay_hydrated">Check your tire pressure and stay hydrated!</string>
 </resources>

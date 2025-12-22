@@ -12,13 +12,17 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.baharlou.pedalpace.R
 import com.baharlou.pedalpace.domain.model.*
+import com.baharlou.pedalpace.presentation.components.AiProTip
 import com.baharlou.pedalpace.presentation.components.ForecastCard
 import com.baharlou.pedalpace.presentation.viewModel.WeatherState
 import com.baharlou.pedalpace.presentation.viewModel.WeatherViewModel
@@ -33,6 +37,8 @@ fun WeatherScreen(
     val weatherState by viewModel.weatherState
     val locationPermissionGranted by viewModel.locationPermissionGranted
     val dailyScores by viewModel.dailyScores
+    val aiTip by viewModel.aiTip.collectAsStateWithLifecycle()
+    val isAiLoading by viewModel.isAiLoading.collectAsStateWithLifecycle()
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -54,7 +60,9 @@ fun WeatherScreen(
         weatherState = weatherState,
         dailyScores = dailyScores,
         onFormatDate = { timestamp -> viewModel.formatDate(timestamp) },
-        onGetIconUrl = { iconCode -> viewModel.getWeatherIconUrl(iconCode) }
+        onGetIconUrl = { iconCode -> viewModel.getWeatherIconUrl(iconCode) },
+        aiTip = aiTip,
+        isAiLoading = isAiLoading
     )
 }
 
@@ -65,7 +73,9 @@ fun WeatherScreenContent(
     dailyScores: List<Pair<DailyForecast, Score>>,
     onFormatDate: (Long) -> String,
     onGetIconUrl: (String) -> String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    aiTip: String?,
+    isAiLoading: Boolean
 ) {
     Scaffold(
         topBar = {
@@ -73,7 +83,7 @@ fun WeatherScreenContent(
                 title = {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            text = "Weather Forecast",
+                            text = stringResource(R.string.weather_forecast),
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp,
                             color = MaterialTheme.colorScheme.onBackground
@@ -87,7 +97,8 @@ fun WeatherScreenContent(
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = weatherState.weatherData?.city?.name ?: "Detecting...",
+                                text = weatherState.weatherData?.city?.name
+                                    ?: stringResource(R.string.detecting),
                                 fontSize = 12.sp,
                                 color = MaterialTheme.colorScheme.onBackground//.copy(alpha = 0.6f)
                             )
@@ -96,7 +107,11 @@ fun WeatherScreenContent(
                 },
                 actions = {
                     IconButton(onClick = {}, enabled = false) {
-                        Icon(Icons.Default.Settings, contentDescription = null, tint = Color.Transparent)
+                        Icon(
+                            Icons.Default.Settings,
+                            contentDescription = null,
+                            tint = Color.Transparent
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -112,15 +127,19 @@ fun WeatherScreenContent(
                 weatherState.isLoading || (data == null && weatherState.error == null) -> {
                     LoadingScreen()
                 }
+
                 weatherState.error != null -> ErrorScreen(error = weatherState.error, onRetry = {})
                 data != null -> {
                     WeatherContent(
                         weatherData = data,
                         dailyScores = dailyScores,
                         onFormatDate = onFormatDate,
-                        onGetIconUrl = onGetIconUrl
+                        onGetIconUrl = onGetIconUrl,
+                        aiTip = aiTip?:"",
+                        isAiLoading = isAiLoading
                     )
                 }
+
                 else -> WelcomeScreen()
             }
         }
@@ -132,7 +151,9 @@ fun WeatherContent(
     weatherData: WeatherResponse,
     dailyScores: List<Pair<DailyForecast, Score>>,
     onFormatDate: (Long) -> String,
-    onGetIconUrl: (String) -> String
+    onGetIconUrl: (String) -> String,
+    aiTip: String,
+    isAiLoading: Boolean
 ) {
     val bestDay = remember(dailyScores) { dailyScores.maxByOrNull { it.second.score } }
 
@@ -141,6 +162,8 @@ fun WeatherContent(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+
+        //HEADER
         item {
             WeatherHeader(
                 weatherData = weatherData,
@@ -149,21 +172,35 @@ fun WeatherContent(
             )
         }
 
+
+        //AI TIP
+        item {
+            AiProTip(tip = aiTip, isLoading = isAiLoading)
+        }
+
+
+        //NEXT DAYS
         item {
             Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "NEXT DAYS",
+                    text = stringResource(R.string.next_days),
                     fontWeight = FontWeight.ExtraBold,
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
                     fontSize = 12.sp,
                     letterSpacing = 1.sp
                 )
                 TextButton(onClick = {}) {
-                    Text("See 5 Days", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+                    Text(
+                        stringResource(R.string.see_5_days),
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
         }
@@ -181,7 +218,11 @@ fun WeatherContent(
 // PREVIEWS ///////////////////
 
 @Preview(showBackground = true, name = "Light Mode")
-@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES, name = "Dark Mode")
+@Preview(
+    showBackground = true,
+    uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES,
+    name = "Dark Mode"
+)
 @Composable
 fun PreviewWeatherScreenFull() {
     val mockForecasts = listOf(
@@ -191,9 +232,9 @@ fun PreviewWeatherScreenFull() {
     )
 
     val mockScores = listOf(
-        Score(85, Recommendation.EXCELLENT, emptyList(),"Perfect weather for cycling!"),
-        Score(65, Recommendation.GOOD,emptyList(), "A bit cloudy but safe."),
-        Score(35, Recommendation.POOR, emptyList(),"High chance of rain.")
+        Score(85, Recommendation.EXCELLENT, emptyList(), "Perfect weather for cycling!"),
+        Score(65, Recommendation.GOOD, emptyList(), "A bit cloudy but safe."),
+        Score(35, Recommendation.POOR, emptyList(), "High chance of rain.")
     )
 
     val mockState = WeatherState(
@@ -212,7 +253,9 @@ fun PreviewWeatherScreenFull() {
             weatherState = mockState,
             dailyScores = dailyScores,
             onFormatDate = { "Sat, Dec 20" },
-            onGetIconUrl = { "" }
+            onGetIconUrl = { "" },
+            aiTip = "This is a tip",
+            isAiLoading = false
         )
     }
 }

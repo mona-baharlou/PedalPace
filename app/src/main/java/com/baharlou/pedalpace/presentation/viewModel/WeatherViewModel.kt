@@ -6,10 +6,12 @@ import android.content.pm.PackageManager
 import android.location.Location
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshotFlow
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.baharlou.pedalpace.data.remote.Config
+import com.baharlou.pedalpace.domain.ai.WeatherAiService
 import com.baharlou.pedalpace.domain.model.Score
 import com.baharlou.pedalpace.domain.model.DailyForecast
 import com.baharlou.pedalpace.domain.model.Temperature
@@ -19,6 +21,8 @@ import com.baharlou.pedalpace.domain.usecase.FetchForecastUseCase
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -27,7 +31,8 @@ import java.util.Locale
 class WeatherViewModel(
     application: Application,
     private val getWeatherForecastUseCase: FetchForecastUseCase,
-    private val calculateBikeRidingScoreUseCase: ScoreCalculatorUseCase
+    private val calculateBikeRidingScoreUseCase: ScoreCalculatorUseCase,
+    private val aiService: WeatherAiService
 ) : AndroidViewModel(application) {
 
     private val fusedLocationClient: FusedLocationProviderClient =
@@ -45,8 +50,23 @@ class WeatherViewModel(
     private val _dailyScores = mutableStateOf<List<Pair<DailyForecast, Score>>>(emptyList())
     val dailyScores: State<List<Pair<DailyForecast, Score>>> = _dailyScores
 
+    private val _aiTip = MutableStateFlow<String?>(null)
+    val aiTip = _aiTip.asStateFlow()
+
+    private val _isAiLoading = MutableStateFlow(false)
+    val isAiLoading = _isAiLoading.asStateFlow()
+
     init {
         checkLocationPermission()
+
+        viewModelScope.launch {
+            snapshotFlow { weatherState.value.weatherData }
+                .collect { data ->
+                    if (data != null) {
+                        fetchWeatherTip()
+                    }
+                }
+        }
     }
 
     fun checkLocationPermission() {
@@ -103,6 +123,8 @@ class WeatherViewModel(
                         weatherData = response.copy(daily = dailyForecasts),
                         error = null
                     )
+
+                    fetchWeatherTip()
                 }
                 .onFailure { exception ->
                     _weatherState.value = _weatherState.value.copy(
@@ -140,6 +162,21 @@ class WeatherViewModel(
                     precipitationProbability = dayList.map { it.precipitationProbability }.average()
                 )
             }
+    }
+
+    fun fetchWeatherTip() {
+        val data = _weatherState.value.weatherData ?: return
+
+        viewModelScope.launch {
+            _isAiLoading.value = true
+            try {
+                // Calling gemini service with the secured API key
+                val tip = aiService.getProTip(data)
+                _aiTip.value = tip
+            } finally {
+                _isAiLoading.value = false
+            }
+        }
     }
 
     // --- UI Helpers ---

@@ -13,9 +13,13 @@ class WeatherRepositoryImpl(
         lon: Double
     ): Result<WeatherResponse> {
         return try {
-            val response = apiService.getWeather(lat = lat, lon = lon, apiKey = Config.API_KEY)
+            val response = apiService.getWeather(
+                lat = lat,
+                lon = lon,
+                apiKey = Config.API_KEY
+            )
             Result.success(response)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }

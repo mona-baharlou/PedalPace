@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
+    //alias(libs.plugins.google.secrets)
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -19,6 +22,21 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+
+        // OpenWeather API Constraints
+        buildConfigField(
+            "String", "OPEN_WEATHER_BASE_URL", "\"https://api.openweathermap.org/data/2.5/\""
+        )
+
+        buildConfigField(
+            "String", "OPEN_WEATHER_PLAN", "\"FREE_TIER_ONLY\""
+        )
+
+        buildConfigField(
+            "Int", "OPEN_WEATHER_MAX_CALLS_PER_MIN", "60"
+        )
+
     }
 
     signingConfigs {
@@ -39,8 +57,7 @@ android {
 
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
         }
     }
@@ -84,6 +101,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.compose.foundation)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -111,11 +129,15 @@ dependencies {
     // Location services
     implementation(libs.location.services)
 
-// Koin for DI
+    // Koin for DI
     implementation(libs.koin.android)
 
     //implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose.v410)
+
+
+    // Generative AI SDK for Gemini
+    implementation(libs.generativeai)
 
 }
 
