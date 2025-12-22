@@ -56,17 +56,19 @@ class WeatherViewModel(
     private val _isAiLoading = MutableStateFlow(false)
     val isAiLoading = _isAiLoading.asStateFlow()
 
+    private var lastFetchedWeatherId: String? = null
+
     init {
         checkLocationPermission()
 
-        viewModelScope.launch {
+      /*  viewModelScope.launch {
             snapshotFlow { weatherState.value.weatherData }
                 .collect { data ->
                     if (data != null) {
                         fetchWeatherTip()
                     }
                 }
-        }
+        }*/
     }
 
     fun checkLocationPermission() {
@@ -167,12 +169,23 @@ class WeatherViewModel(
     fun fetchWeatherTip() {
         val data = _weatherState.value.weatherData ?: return
 
+        // Generate an ID that represents this specific weather snapshot
+        val weatherId = "${data.city.name}-${data.list.firstOrNull()?.date}"
+
+        // 1. check duplicate IDs or existing loading states
+        if (weatherId == lastFetchedWeatherId || _isAiLoading.value) return
+
         viewModelScope.launch {
+            // 2. Set the ID immediately to block other concurrent calls
+            lastFetchedWeatherId = weatherId
             _isAiLoading.value = true
+
             try {
-                // Calling gemini service with the secured API key
                 val tip = aiService.getProTip(data)
                 _aiTip.value = tip
+            } catch (e: Exception) {
+                // Reset the ID if it fails, so we can try again if the user refreshes
+                lastFetchedWeatherId = null
             } finally {
                 _isAiLoading.value = false
             }

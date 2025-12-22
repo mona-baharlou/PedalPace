@@ -34,7 +34,7 @@ android {
         )
 
         buildConfigField(
-            "Int", "OPEN_WEATHER_MAX_CALLS_PER_MIN", "60"
+            "int", "OPEN_WEATHER_MAX_CALLS_PER_MIN", "60"
         )
 
     }
