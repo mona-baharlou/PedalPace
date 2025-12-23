@@ -28,6 +28,8 @@ Unlike standard weather apps, PedalPace features an ** AI Tip** integration.:
 
 ---
 
+![](https://github.com/mona-baharlou/PedalPace/blob/master/screenshots/2.JPG)
+
 ##  Tech Stack
 
 *  **Architecture**: Clean Architecture + MVVM (Model-View-ViewModel).
