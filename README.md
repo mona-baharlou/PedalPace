@@ -28,7 +28,7 @@ Unlike standard weather apps, PedalPace features an ** AI Tip** integration.:
 
 ---
 
-![](https://github.com/mona-baharlou/PedalPace/blob/master/screenshots/2.JPG)
+![](https://github.com/mona-baharlou/PedalPace/blob/master/screenshots/app.jpg)
 
 ##  Tech Stack
 
