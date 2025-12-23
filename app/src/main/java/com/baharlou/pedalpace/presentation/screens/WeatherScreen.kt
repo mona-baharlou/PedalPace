@@ -24,6 +24,7 @@ import com.baharlou.pedalpace.R
 import com.baharlou.pedalpace.domain.model.*
 import com.baharlou.pedalpace.presentation.components.AiProTip
 import com.baharlou.pedalpace.presentation.components.ForecastCard
+import com.baharlou.pedalpace.presentation.components.OpenWeatherAttribution
 import com.baharlou.pedalpace.presentation.viewModel.WeatherState
 import com.baharlou.pedalpace.presentation.viewModel.WeatherViewModel
 import com.baharlou.pedalpace.ui.theme.PedalPaceTheme
@@ -212,6 +213,12 @@ fun WeatherContent(
                 formattedDate = onFormatDate(forecast.date)
             )
         }
+
+
+        // OPENWEATHER Attribution
+        item {
+            OpenWeatherAttribution()
+        }
     }
 }
 
@@ -232,9 +239,9 @@ fun PreviewWeatherScreenFull() {
     )
 
     val mockScores = listOf(
-        Score(85, Recommendation.EXCELLENT, emptyList(), "Perfect weather for cycling!"),
-        Score(65, Recommendation.GOOD, emptyList(), "A bit cloudy but safe."),
-        Score(35, Recommendation.POOR, emptyList(), "High chance of rain.")
+        Score(85, Recommendation.EXCELLENT, emptyList(), emptyList(),"Perfect weather for cycling!"),
+        Score(65, Recommendation.GOOD, emptyList(), emptyList(),"A bit cloudy but safe."),
+        Score(35, Recommendation.POOR, emptyList(),emptyList(), "High chance of rain.")
     )
 
     val mockState = WeatherState(

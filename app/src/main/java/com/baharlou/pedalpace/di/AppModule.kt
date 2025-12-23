@@ -3,7 +3,7 @@ package com.baharlou.pedalpace.di
 import com.baharlou.pedalpace.data.remote.WeatherApi
 import com.baharlou.pedalpace.data.remote.Config.BASE_URL
 import com.baharlou.pedalpace.data.repository.WeatherRepositoryImpl
-import com.baharlou.pedalpace.domain.ai.WeatherAiService
+import com.baharlou.pedalpace.domain.ai.GetAiTipUseCase
 import com.baharlou.pedalpace.domain.repository.WeatherRepository
 import com.baharlou.pedalpace.domain.usecase.ScoreCalculatorUseCase
 import com.baharlou.pedalpace.domain.usecase.FetchForecastUseCase
@@ -37,7 +37,7 @@ val appModule = module {
 
     single { ScoreCalculatorUseCase() }
 
-    single { WeatherAiService(androidContext()) }
+    single { GetAiTipUseCase(androidContext()) }
 
     viewModel { WeatherViewModel(get(),
         get(),

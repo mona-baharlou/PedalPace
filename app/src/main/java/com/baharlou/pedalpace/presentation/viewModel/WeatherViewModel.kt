@@ -6,12 +6,11 @@ import android.content.pm.PackageManager
 import android.location.Location
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.snapshotFlow
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.baharlou.pedalpace.data.remote.Config
-import com.baharlou.pedalpace.domain.ai.WeatherAiService
+import com.baharlou.pedalpace.domain.ai.GetAiTipUseCase
 import com.baharlou.pedalpace.domain.model.Score
 import com.baharlou.pedalpace.domain.model.DailyForecast
 import com.baharlou.pedalpace.domain.model.Temperature
@@ -32,7 +31,7 @@ class WeatherViewModel(
     application: Application,
     private val getWeatherForecastUseCase: FetchForecastUseCase,
     private val calculateBikeRidingScoreUseCase: ScoreCalculatorUseCase,
-    private val aiService: WeatherAiService
+    private val aiService: GetAiTipUseCase
 ) : AndroidViewModel(application) {
 
     private val fusedLocationClient: FusedLocationProviderClient =
@@ -126,7 +125,7 @@ class WeatherViewModel(
                         error = null
                     )
 
-                    fetchWeatherTip()
+                    fetchAITip()
                 }
                 .onFailure { exception ->
                     _weatherState.value = _weatherState.value.copy(
@@ -166,7 +165,7 @@ class WeatherViewModel(
             }
     }
 
-    fun fetchWeatherTip() {
+    fun fetchAITip() {
         val data = _weatherState.value.weatherData ?: return
 
         // Generate an ID that represents this specific weather snapshot

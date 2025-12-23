@@ -105,7 +105,9 @@ private fun PreviewForecastCardExcellent() {
         score = 92,
         recommendation = Recommendation.EXCELLENT,
         overallRating = "Perfect visibility and light winds.",
-        metrics = emptyList()
+        metrics = emptyList(),
+        aiReasoning = "",
+        wmetrics = emptyList()
     )
 
     PedalPaceTheme {
@@ -136,7 +138,9 @@ private fun PreviewForecastCardPoor() {
         score = 25,
         recommendation = Recommendation.POOR,
         overallRating = "Heavy rain expected all day.",
-        metrics = emptyList()
+        metrics = emptyList(),
+        wmetrics = emptyList(),
+        aiReasoning = ""
     )
 
     PedalPaceTheme {

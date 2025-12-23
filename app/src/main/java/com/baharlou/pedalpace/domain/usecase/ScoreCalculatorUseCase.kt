@@ -1,7 +1,6 @@
 package com.baharlou.pedalpace.domain.usecase
 
 import com.baharlou.pedalpace.domain.model.*
-import java.util.Locale
 
 /**
  * Business logic to determine the "Cycling Suitability Score" based on weather conditions.
@@ -31,13 +30,31 @@ class ScoreCalculatorUseCase {
             calculateHumidityMetric(forecast.humidity)
         )
 
-        val totalScore = metrics.sumOf { it.score * it.weight }.toInt()
+       // val totalScore = metrics.sumOf { it.score * it.weight }.toInt()
+
+        // 1. Calculate the initial weighted score
+        var totalScore = metrics.sumOf { it.score * it.weight }.toInt()
+
+        // 2. SAFETY OVERRIDE: If temperature is freezing or wind is extreme,
+        // the ride cannot be "GOOD" regardless of other metrics.
+        val isFreezing = forecast.temperature.max < -10.0
+        val isExtremeWind = (forecast.windSpeed * 3.6) > 35.0
+        val isStormy = (forecast.weather.firstOrNull()?.id ?: 800) < 300 // Thunderstorms
+
+        // If any of above conditions is met, we cap the score at 30 (Poor)
+        val safetyTriggered = isFreezing || isExtremeWind || isStormy
+        if (safetyTriggered) {
+            totalScore = totalScore.coerceAtMost(30)
+        }
+
 
         return Score(
             score = totalScore,
             recommendation = mapScoreToRecommendation(totalScore),
             metrics = metrics,
-            overallRating = mapScoreToRatingMessage(totalScore)
+            overallRating = mapScoreToRatingMessage(totalScore, safetyTriggered, isFreezing, isExtremeWind),
+            wmetrics = emptyList(),
+            aiReasoning = ""
         )
     }
 
@@ -47,11 +64,11 @@ class ScoreCalculatorUseCase {
         name = "Temperature",
         weight = WEIGHT_TEMP,
         score = when {
-            temp < -10 || temp > 40 -> 0
-            temp in OPTIMAL_TEMP_MIN..OPTIMAL_TEMP_MAX -> 100
-            temp in 10.0..30.0 -> 80
-            temp in 0.0..35.0 -> 40
-            else -> 10
+            temp < -10 || temp > 40 -> 0      // Extreme
+            temp in 15.0..25.0 -> 100         // Optimal
+            temp in 10.0..30.0 -> 80          // Good
+            temp in 0.0..35.0 -> 40           // Acceptable
+            else -> 10                        // Freezing or very hot
         },
         description = when {
             temp < 0 -> "Very cold, wear thermal gear"
@@ -72,7 +89,7 @@ class ScoreCalculatorUseCase {
             kmh < 15 -> 80
             kmh < 22 -> 50
             kmh < 30 -> 20
-            else -> 0
+            else -> 0 //extreme wind
         }
         return Metric(
             name = "Wind",
@@ -134,17 +151,43 @@ class ScoreCalculatorUseCase {
 
     //  Final Mapping
 
-    private fun mapScoreToRecommendation(score: Int) = when {
+    /*private fun mapScoreToRecommendation(score: Int) = when {
         score >= 85 -> Recommendation.EXCELLENT
         score >= 70 -> Recommendation.GOOD
         score >= 50 -> Recommendation.MODERATE
         else -> Recommendation.POOR
     }
+*/
 
-    private fun mapScoreToRatingMessage(score: Int) = when {
+    private fun mapScoreToRecommendation(score: Int) = when {
+        score >= 85 -> Recommendation.EXCELLENT
+        score >= 70 -> Recommendation.GOOD
+        score >= 50 -> Recommendation.MODERATE
+        score >= 25 -> Recommendation.POOR
+        else -> Recommendation.POOR
+    }
+
+    private fun mapScoreToRatingMessage(
+        score: Int,
+        safetyTriggered: Boolean,
+        isFreezing: Boolean,
+        isWindy: Boolean
+    ): String {
+        return when {
+            isFreezing -> "Dangerous cold! Stay indoors. ❄️"
+            isWindy -> "Extreme winds! High risk of crashes. 💨"
+            safetyTriggered -> "Hazardous conditions detected. ⚠️"
+            score >= 85 -> "Perfect for cycling! "
+            score >= 70 -> "Great conditions! 🌤️"
+            score >= 50 -> "Manageable conditions ⚠️"
+            else -> "Better to stay indoors today 🏠"
+        }
+    }
+
+   /* private fun mapScoreToRatingMessage(score: Int) = when {
         score >= 85 -> "Perfect for cycling! 🚴"
         score >= 70 -> "Great conditions! 🌤️"
         score >= 50 -> "Manageable conditions ⚠️"
         else -> "Better to stay indoors today 🏠"
-    }
+    }*/
 }

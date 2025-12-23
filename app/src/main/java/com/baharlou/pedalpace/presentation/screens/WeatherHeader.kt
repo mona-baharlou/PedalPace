@@ -252,7 +252,9 @@ private fun PreviewWeatherHeaderExcellent() {
         score = 85,
         recommendation = Recommendation.EXCELLENT,
         overallRating = "The wind is low and the temperature is perfect for a long ride.",
-        metrics = emptyList()
+        metrics = emptyList(),
+        aiReasoning = "",
+        wmetrics = emptyList()
     )
 
     PedalPaceTheme {

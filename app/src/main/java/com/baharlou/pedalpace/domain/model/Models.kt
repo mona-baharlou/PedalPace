@@ -1,10 +1,12 @@
 package com.baharlou.pedalpace.domain.model
 
 data class Score(
-    val score: Int,
+    val score: Int, //0-100
     val recommendation: Recommendation,
     val metrics: List<Metric>,
-    val overallRating: String
+    val wmetrics: List<WeatherMetric>,
+    val overallRating: String,
+    val aiReasoning: String? = null
 )
 
 enum class Recommendation {
@@ -21,4 +23,10 @@ data class Metric(
     val weight: Double,
     val description: String,
     val icon: String
+)
+
+data class WeatherMetric(
+    val name: String,
+    val value: String,
+    val score: Int // Individual score for that metric
 )
