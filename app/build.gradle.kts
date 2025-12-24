@@ -182,3 +182,10 @@ tasks.register("assembleReleaseBundle") {
     description = "Assemble Release AAB"
     dependsOn(tasks.named("bundleRelease"))
 }
+
+secrets {
+    // Stop the plugin from generating BuildConfig fields automatically
+    // This allows manual buildConfigField code to work without conflict
+    defaultPropertiesFileName = "local.properties"
+    //ignoreList.add("keyToIgnore")
+}
