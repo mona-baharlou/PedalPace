@@ -59,13 +59,18 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = rootProject.file(localProperties.getProperty("STORE_FILE") as String)
-            storePassword = localProperties.getProperty("KEYSTORE_PASSWORD") as String
-            keyPassword = localProperties.getProperty("KEY_PASSWORD") as String
-            keyAlias = localProperties.getProperty("KEY_ALIAS") as String
-            storeType = localProperties.getProperty("STORE_TYPE") as String
+            // Load properties, providing defaults for CI
+            val keystorePath = localProperties.getProperty("STORE_FILE") ?: "debug.keystore"
+            val keystorePassword = localProperties.getProperty("STORE_PASSWORD") ?: "android"
+            val alias = localProperties.getProperty("KEY_ALIAS") ?: "androiddebugkey"
+            val aliasPassword = localProperties.getProperty("KEY_PASSWORD") ?: "android"
 
+            storeFile = file(keystorePath)
+            storePassword = keystorePassword
+            keyAlias = alias
+            keyPassword = aliasPassword
         }
+
     }
 
 
@@ -131,11 +136,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    // ViewModel
+// ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
-    // Networking
+// Networking
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
     implementation(libs.okhttp)
@@ -143,23 +148,23 @@ dependencies {
     implementation(libs.gson)
 
 
-    // Image loading
+// Image loading
     implementation(libs.coil.compose)
 
-    // Location services
+// Location services
     implementation(libs.location.services)
 
-    // Koin for DI
+// Koin for DI
     implementation(libs.koin.android)
 
-    //implementation(libs.koin.android)
+//implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose.v410)
 
 
-    // Generative AI SDK for Gemini
+// Generative AI SDK for Gemini
     implementation(libs.generativeai)
 
-    // Koin for Testing
+// Koin for Testing
     androidTestImplementation(libs.koin.test)
     testImplementation(libs.truth)
 
