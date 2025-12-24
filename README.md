@@ -9,7 +9,7 @@
 * **AI-Powered Pro Tips**: Uses **Google Gemini AI** to provide human-like coaching advice based on current conditions.
 * **Cycling Suitability Score**: A custom algorithm that calculates a 0-100 score weighing temperature, wind speed, and precipitation.
 * **5-Day Forecast**: Clean, scannable forecast cards designed for quick glance-and-go decision making.
-* **recise Location**: Integration with Google Play Services for real-time local weather updates.
+* **Precise Location**: Integration with Google Play Services for real-time local weather updates.
 * **Modern UI**: Built 100% with **Jetpack Compose** following Material 3 guidelines.
 
 ---
@@ -27,6 +27,8 @@ Unlike standard weather apps, PedalPace features an ** AI Tip** integration.:
 3. **AI Layer**: Using **Gemini** to gennerate a specialized "Cycling Tip".
 
 ---
+
+![](https://github.com/mona-baharlou/PedalPace/blob/master/screenshots/app.jpg)
 
 ##  Tech Stack
 
