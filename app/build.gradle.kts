@@ -1,3 +1,4 @@
+import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
@@ -10,6 +11,8 @@ plugins {
 }
 
 android {
+    val localProperties = Properties()
+
     namespace = "com.baharlou.pedalpace"
     compileSdk = 36
 
@@ -25,20 +28,19 @@ android {
             useSupportLibrary = true
         }
 
-        // 1. Load the local.properties file
-        val localProperties = Properties()
+        // 1. Manually load local.properties
         val localPropertiesFile = rootProject.file("local.properties")
         if (localPropertiesFile.exists()) {
-            localProperties.load(localPropertiesFile.inputStream())
+            localProperties.load(FileInputStream(localPropertiesFile))
         }
 
-        // 2. Read the keys (fallback to empty string so the build doesn't crash)
-        val geminiKey = localProperties.getProperty("GEMINI_API_KEY") ?: ""
+        // 2. Read the values (Use the EXACT name from your CI: WEATHER_API_KEY)
         val weatherKey = localProperties.getProperty("WEATHER_API_KEY") ?: ""
+        val geminiKey = localProperties.getProperty("GEMINI_API_KEY") ?: ""
 
-        // 3. Inject them into BuildConfig
-        buildConfigField("String", "GEMINI_API_KEY", "\"$geminiKey\"")
+        // 3. Inject into BuildConfig with surrounding quotes
         buildConfigField("String", "WEATHER_API_KEY", "\"$weatherKey\"")
+        buildConfigField("String", "GEMINI_API_KEY", "\"$geminiKey\"")
 
         // OpenWeather API Constraints
         buildConfigField(
@@ -57,11 +59,11 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = rootProject.file(project.property("STORE_FILE") as String)
-            storePassword = project.property("KEYSTORE_PASSWORD") as String
-            keyPassword = project.property("KEY_PASSWORD") as String
-            keyAlias = project.property("KEY_ALIAS") as String
-            storeType = project.property("STORE_TYPE") as String
+            storeFile = rootProject.file(localProperties.getProperty("STORE_FILE") as String)
+            storePassword = localProperties.getProperty("KEYSTORE_PASSWORD") as String
+            keyPassword = localProperties.getProperty("KEY_PASSWORD") as String
+            keyAlias = localProperties.getProperty("KEY_ALIAS") as String
+            storeType = localProperties.getProperty("STORE_TYPE") as String
 
         }
     }

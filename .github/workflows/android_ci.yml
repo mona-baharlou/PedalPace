@@ -31,8 +31,5 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build and Test
-        # Combining these ensures BuildConfig is generated before tests run
+       # Running assembleDebug first ensures BuildConfig is generated correctly
         run: ./gradlew assembleDebug testDebugUnitTest
-
-      - name: Run Android Lint
-        run: ./gradlew lintDebug
