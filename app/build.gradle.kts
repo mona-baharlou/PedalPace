@@ -29,18 +29,20 @@ android {
         }
 
         // 1. Manually load local.properties
-        val localPropertiesFile = rootProject.file("local.properties")
+        /*val localPropertiesFile = rootProject.file("local.properties")
         if (localPropertiesFile.exists()) {
             localProperties.load(FileInputStream(localPropertiesFile))
         }
+*/
+        val weatherKey = project.findProperty("WEATHER_API_KEY")?.toString() ?: ""
+        val geminiKey = project.findProperty("GEMINI_API_KEY")?.toString() ?: ""
 
-        // 2. Read the values (Use the EXACT name from your CI: WEATHER_API_KEY)
-        val weatherKey = localProperties.getProperty("WEATHER_API_KEY") ?: ""
-        val geminiKey = localProperties.getProperty("GEMINI_API_KEY") ?: ""
-
-        // 3. Inject into BuildConfig with surrounding quotes
         buildConfigField("String", "WEATHER_API_KEY", "\"$weatherKey\"")
         buildConfigField("String", "GEMINI_API_KEY", "\"$geminiKey\"")
+        // 2. Read the values (Use the EXACT name from your CI: WEATHER_API_KEY)
+        //val weatherKey = localProperties.getProperty("WEATHER_API_KEY") ?: ""
+        //val geminiKey = localProperties.getProperty("GEMINI_API_KEY") ?: ""
+
 
         // OpenWeather API Constraints
         buildConfigField(
@@ -59,7 +61,6 @@ android {
 
     signingConfigs {
         create("release") {
-            // Load properties, providing defaults for CI
             val keystorePath = localProperties.getProperty("STORE_FILE") ?: "debug.keystore"
             val keystorePassword = localProperties.getProperty("STORE_PASSWORD") ?: "android"
             val alias = localProperties.getProperty("KEY_ALIAS") ?: "androiddebugkey"
