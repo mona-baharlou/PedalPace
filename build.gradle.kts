@@ -5,7 +5,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath(libs.secrets.gradle.plugin)
+        //classpath(libs.secrets.gradle.plugin)
     }
 }
 

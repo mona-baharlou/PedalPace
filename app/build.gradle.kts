@@ -7,11 +7,11 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 
     //alias(libs.plugins.google.secrets)
-    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    //id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
-    val localProperties = Properties()
+    val localProps = Properties()
 
     namespace = "com.baharlou.pedalpace"
     compileSdk = 36
@@ -28,20 +28,18 @@ android {
             useSupportLibrary = true
         }
 
-        // 1. Manually load local.properties
-        /*val localPropertiesFile = rootProject.file("local.properties")
-        if (localPropertiesFile.exists()) {
-            localProperties.load(FileInputStream(localPropertiesFile))
+        // 1. MUST load the file manually because project.findProperty
+        val localPropsFile = rootProject.file("local.properties")
+        if (localPropsFile.exists()) {
+            localPropsFile.inputStream().use { localProps.load(it) }
         }
-*/
-        val weatherKey = project.findProperty("WEATHER_API_KEY")?.toString() ?: ""
-        val geminiKey = project.findProperty("GEMINI_API_KEY")?.toString() ?: ""
 
+        val weatherKey = localProps.getProperty("WEATHER_API_KEY") ?: "missing_key"
+        val geminiKey = localProps.getProperty("GEMINI_API_KEY") ?: "missing_key"
+
+        // the Java compiler ALWAYS sees a valid String like = "missing_key";
         buildConfigField("String", "WEATHER_API_KEY", "\"$weatherKey\"")
         buildConfigField("String", "GEMINI_API_KEY", "\"$geminiKey\"")
-        // 2. Read the values (Use the EXACT name from your CI: WEATHER_API_KEY)
-        //val weatherKey = localProperties.getProperty("WEATHER_API_KEY") ?: ""
-        //val geminiKey = localProperties.getProperty("GEMINI_API_KEY") ?: ""
 
 
         // OpenWeather API Constraints
@@ -61,10 +59,10 @@ android {
 
     signingConfigs {
         create("release") {
-            val keystorePath = localProperties.getProperty("STORE_FILE") ?: "debug.keystore"
-            val keystorePassword = localProperties.getProperty("STORE_PASSWORD") ?: "android"
-            val alias = localProperties.getProperty("KEY_ALIAS") ?: "androiddebugkey"
-            val aliasPassword = localProperties.getProperty("KEY_PASSWORD") ?: "android"
+            val keystorePath = localProps.getProperty("STORE_FILE") ?: "debug.keystore"
+            val keystorePassword = localProps.getProperty("STORE_PASSWORD") ?: "android"
+            val alias = localProps.getProperty("KEY_ALIAS") ?: "androiddebugkey"
+            val aliasPassword = localProps.getProperty("KEY_PASSWORD") ?: "android"
 
             storeFile = file(keystorePath)
             storePassword = keystorePassword
@@ -183,9 +181,10 @@ tasks.register("assembleReleaseBundle") {
     dependsOn(tasks.named("bundleRelease"))
 }
 
+/*
 secrets {
     // Stop the plugin from generating BuildConfig fields automatically
     // This allows manual buildConfigField code to work without conflict
     defaultPropertiesFileName = "local.properties"
     //ignoreList.add("keyToIgnore")
-}
+}*/
