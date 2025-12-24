@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -23,6 +25,20 @@ android {
             useSupportLibrary = true
         }
 
+        // 1. Load the local.properties file
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localProperties.load(localPropertiesFile.inputStream())
+        }
+
+        // 2. Read the keys (fallback to empty string so the build doesn't crash)
+        val geminiKey = localProperties.getProperty("GEMINI_API_KEY") ?: ""
+        val weatherKey = localProperties.getProperty("WEATHER_API_KEY") ?: ""
+
+        // 3. Inject them into BuildConfig
+        buildConfigField("String", "GEMINI_API_KEY", "\"$geminiKey\"")
+        buildConfigField("String", "WEATHER_API_KEY", "\"$weatherKey\"")
 
         // OpenWeather API Constraints
         buildConfigField(
