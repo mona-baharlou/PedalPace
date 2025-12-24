@@ -2,7 +2,7 @@ name: Android CI
 
 on:
   push:
-    branches: [ "master", "develop" ]
+    branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 
@@ -21,24 +21,18 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-
       - name: Create local.properties
         run: |
           echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" > local.properties
           echo "WEATHER_API_KEY=${{ secrets.OPEN_WEATHER_API_KEY }}" >> local.properties
           echo "sdk.dir=$ANDROID_HOME" >> local.properties
 
-      - name: Grant execute permission for gradlew
+      - name: Grant execute permission
         run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew assembleDebug
-
-      - name: Run Unit Tests
-        run: ./gradlew test
+      - name: Build and Test
+        # Combining these ensures BuildConfig is generated before tests run
+        run: ./gradlew assembleDebug testDebugUnitTest
 
       - name: Run Android Lint
         run: ./gradlew lintDebug
-
-      - name: Run Unit Tests
-        run: ./gradlew testDebugUnitTest
