@@ -54,7 +54,7 @@ You will need API keys from:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/YOUR_USERNAME/PedalPace.git
+git clone https://github.com/mona-baharlou/PedalPace.git
 
 ```
 
