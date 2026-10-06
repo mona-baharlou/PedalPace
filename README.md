@@ -1,6 +1,6 @@
 # 🚴 PedalPace
 
-> **The Intelligent Weather Assistant for Cyclists.** > PedalPace combines deterministic weather physics with **Generative AI** to tell you not just the weather, but how it feels to ride in it.
+> **The Intelligent Weather Assistant for Cyclists.**  PedalPace combines deterministic weather physics with **Generative AI** to tell you not just the weather, but how it feels to ride in it.
 
 ---
 
